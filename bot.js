@@ -36,9 +36,7 @@ client.on('message', msg => {
                 let result1 = await pool.request()
                     .input('input_parameter', sql.NVarChar, value)
                     .query('select Mercari_price,POSHMARK_PRICE,Title,Price,isnull(Active,0) Active,ActiveEtsy,ActivePoshmark,activemercari,POSHMARK_LINK,MERCARI_LINK,SPECIFICS_JSON,ebay_id,(select top 1 PICTURE_PATH from ACTIVE_ITEMS_PICTURES where ACTIVE_ITEMS_PICTURES.ACTIVE_ITEMS_ID = ACTIVE_ITEMS.ID) IMG from Active_Items where SKU = @input_parameter')
-
-                msg.reply(result1.recordset[0].id)
-
+ 
                 var specifics = result1.recordset[0].SPECIFICS_JSON.replace("|}", '').replace('{', ''), i
                 specifics = specifics.split('|')
                 output = ''
@@ -47,7 +45,8 @@ client.on('message', msg => {
                     output += specifics[i].split(':')[0] + ":" + specifics[i].split(':')[1] + '\n'
                 }
 
-                if (result1.recordset[0].Title == 1) {
+
+                if (result1.recordset[0].Active == 1) {
                     _state = "@AVAILABLE"
                     _img = 'https://vwoccasion.co.uk/wp-content/uploads/2017/01/bright-green-square-300x300.jpg'
                 } else {
